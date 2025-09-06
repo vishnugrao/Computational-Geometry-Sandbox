@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"image/color"
 	"math/rand"
+	"sort"
 	"strconv"
 	"time"
 
@@ -82,6 +83,56 @@ func (pv *PointVisualizer) GeneratePoints() {
 	}
 }
 
+func (pv *PointVisualizer) GenerateConvexHull() {
+	if len(pv.points) < 3 {
+		return
+	}
+
+	// Sort points by x-coordinate, then by y-coordinate
+	sort.Slice(pv.points, func(i, j int) bool {
+		if pv.points[i].X == pv.points[j].X {
+			return pv.points[i].Y < pv.points[j].Y
+		}
+		return pv.points[i].X < pv.points[j].X
+	})
+
+	// Build lower hull
+	lower := make([]Point, 0)
+	for i := 0; i < len(pv.points); i++ {
+		for len(lower) >= 2 && orientation(lower[len(lower)-2], lower[len(lower)-1], pv.points[i]) != 2 {
+			lower = lower[:len(lower)-1]
+		}
+		lower = append(lower, pv.points[i])
+	}
+
+	// Build upper hull
+	upper := make([]Point, 0)
+	for i := len(pv.points) - 1; i >= 0; i-- {
+		for len(upper) >= 2 && orientation(upper[len(upper)-2], upper[len(upper)-1], pv.points[i]) != 2 {
+			upper = upper[:len(upper)-1]
+		}
+		upper = append(upper, pv.points[i])
+	}
+
+	// Remove last point of each half because it's repeated
+	lower = lower[:len(lower)-1]
+	upper = upper[:len(upper)-1]
+
+	// Concatenate lower and upper hull
+	pv.convexHull = append(lower, upper...)
+}
+
+func orientation(p, q, r Point) int {
+	crossProduct := (q.Y-p.Y)*(r.X-q.X) - (q.X-p.X)*(r.Y-q.Y)
+	if crossProduct == 0 {
+		return 0 // Collinear
+	}
+	if crossProduct > 0 {
+		return 1 // Clockwise
+	}
+	return 2 // Counter-clockwise
+}
+
 // UpdateCanvas redraws all points on the canvas
 func (pv *PointVisualizer) UpdateCanvas() {
 	// Clear existing objects
@@ -126,7 +177,7 @@ func (pv *PointVisualizer) UpdateCanvas() {
 		canvasY := padding + float32(pv.config.MaxY-point.Y)*scaleY - pv.config.PointSize/2
 
 		// Create convex hull circle
-		circle := canvas.NewCircle(pv.config.ConvexHullColor) // Convex hull is set to red here
+		circle := canvas.NewCircle(pv.config.ConvexHullColor)
 		circle.Move(fyne.NewPos(canvasX, canvasY))
 		circle.Resize(fyne.NewSize(pv.config.PointSize, pv.config.PointSize))
 
@@ -232,6 +283,12 @@ func (pv *PointVisualizer) CreateControlPanel() *container.Scroll {
 	})
 	generateBtn.Importance = widget.HighImportance
 
+	generateConvexHullBtn := widget.NewButton("🔺 Generate Convex Hull", func() {
+		pv.GenerateConvexHull()
+		pv.UpdateCanvas()
+	})
+	generateConvexHullBtn.Importance = widget.HighImportance
+
 	// Info display
 	infoLabel := widget.NewRichTextFromMarkdown("**Random Point Generator**\n\nAdjust parameters and click generate to create new scattered points!")
 	infoLabel.Wrapping = fyne.TextWrapWord
@@ -272,6 +329,7 @@ func (pv *PointVisualizer) CreateControlPanel() *container.Scroll {
 		colorControls,
 		widget.NewSeparator(),
 		generateBtn,
+		generateConvexHullBtn,
 	)
 
 	return container.NewScroll(controlPanel)
