@@ -62,7 +62,7 @@ func NewPointVisualizer() *PointVisualizer {
 	}
 
 	// Initialize random seed
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	return pv
 }
