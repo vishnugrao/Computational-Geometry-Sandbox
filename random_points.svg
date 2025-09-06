@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="white" stroke="black" stroke-width="1"/>
+  <g fill="blue" fill-opacity="0.7">
+    <circle cx="174.33" cy="168.42" r="3.0"/>
+    <circle cx="472.20" cy="365.37" r="3.0"/>
+    <circle cx="128.60" cy="491.65" r="3.0"/>
+    <circle cx="450.42" cy="359.03" r="3.0"/>
+    <circle cx="313.80" cy="536.15" r="3.0"/>
+    <circle cx="185.43" cy="73.24" r="3.0"/>
+    <circle cx="514.35" cy="91.40" r="3.0"/>
+    <circle cx="694.48" cy="92.75" r="3.0"/>
+    <circle cx="348.97" cy="41.33" r="3.0"/>
+    <circle cx="424.04" cy="104.22" r="3.0"/>
+    <circle cx="485.54" cy="145.89" r="3.0"/>
+    <circle cx="369.22" cy="267.00" r="3.0"/>
+    <circle cx="431.28" cy="243.57" r="3.0"/>
+    <circle cx="640.76" cy="377.90" r="3.0"/>
+    <circle cx="516.85" cy="84.28" r="3.0"/>
+    <circle cx="443.00" cy="138.28" r="3.0"/>
+    <circle cx="71.46" cy="107.41" r="3.0"/>
+    <circle cx="747.76" cy="29.73" r="3.0"/>
+    <circle cx="541.14" cy="364.12" r="3.0"/>
+    <circle cx="679.34" cy="248.49" r="3.0"/>
+    <circle cx="276.34" cy="303.28" r="3.0"/>
+    <circle cx="96.49" cy="481.92" r="3.0"/>
+    <circle cx="560.85" cy="190.55" r="3.0"/>
+    <circle cx="34.82" cy="35.92" r="3.0"/>
+    <circle cx="247.44" cy="245.02" r="3.0"/>
+    <circle cx="304.91" cy="269.83" r="3.0"/>
+    <circle cx="169.27" cy="244.36" r="3.0"/>
+    <circle cx="606.14" cy="280.72" r="3.0"/>
+    <circle cx="764.06" cy="550.40" r="3.0"/>
+    <circle cx="212.55" cy="81.25" r="3.0"/>
+    <circle cx="72.26" cy="65.22" r="3.0"/>
+    <circle cx="175.91" cy="100.62" r="3.0"/>
+    <circle cx="53.51" cy="156.43" r="3.0"/>
+    <circle cx="214.18" cy="274.98" r="3.0"/>
+    <circle cx="444.33" cy="369.68" r="3.0"/>
+    <circle cx="185.36" cy="285.52" r="3.0"/>
+    <circle cx="531.47" cy="297.08" r="3.0"/>
+    <circle cx="286.63" cy="416.21" r="3.0"/>
+    <circle cx="590.10" cy="147.99" r="3.0"/>
+    <circle cx="658.33" cy="163.42" r="3.0"/>
+    <circle cx="328.07" cy="274.23" r="3.0"/>
+    <circle cx="517.90" cy="547.83" r="3.0"/>
+    <circle cx="772.76" cy="477.84" r="3.0"/>
+    <circle cx="603.22" cy="308.30" r="3.0"/>
+    <circle cx="580.47" cy="177.23" r="3.0"/>
+    <circle cx="278.15" cy="349.54" r="3.0"/>
+    <circle cx="378.38" cy="566.79" r="3.0"/>
+    <circle cx="630.97" cy="164.71" r="3.0"/>
+    <circle cx="652.36" cy="522.23" r="3.0"/>
+    <circle cx="135.16" cy="493.53" r="3.0"/>
+  </g>
+</svg>
