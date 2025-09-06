@@ -25,38 +25,42 @@ type Point struct {
 
 // GUIConfig holds configuration for the GUI application
 type GUIConfig struct {
-	NumPoints    int
-	MinX, MaxX   float64
-	MinY, MaxY   float64
-	CanvasWidth  float32
-	CanvasHeight float32
-	PointSize    float32
-	PointColor   color.Color
+	NumPoints       int
+	MinX, MaxX      float64
+	MinY, MaxY      float64
+	CanvasWidth     float32
+	CanvasHeight    float32
+	PointSize       float32
+	PointColor      color.Color
+	ConvexHullColor color.Color
 }
 
 // PointVisualizer manages the GUI application
 type PointVisualizer struct {
-	config       *GUIConfig
-	points       []Point
-	canvas       *fyne.Container
-	pointObjects []fyne.CanvasObject
-	app          fyne.App
-	window       fyne.Window
+	config            *GUIConfig
+	points            []Point
+	canvas            *fyne.Container
+	pointObjects      []fyne.CanvasObject
+	app               fyne.App
+	window            fyne.Window
+	convexHull        []Point
+	convexHullObjects []fyne.CanvasObject
 }
 
 // NewPointVisualizer creates a new point visualizer instance
 func NewPointVisualizer() *PointVisualizer {
 	pv := &PointVisualizer{
 		config: &GUIConfig{
-			NumPoints:    30,
-			MinX:         0.0,
-			MaxX:         100.0,
-			MinY:         0.0,
-			MaxY:         100.0,
-			CanvasWidth:  600,
-			CanvasHeight: 400,
-			PointSize:    6,
-			PointColor:   color.RGBA{R: 70, G: 130, B: 255, A: 255}, // Steel blue
+			NumPoints:       30,
+			MinX:            0.0,
+			MaxX:            100.0,
+			MinY:            0.0,
+			MaxY:            100.0,
+			CanvasWidth:     600,
+			CanvasHeight:    400,
+			PointSize:       6,
+			PointColor:      color.RGBA{R: 70, G: 130, B: 255, A: 255}, // Steel blue default color
+			ConvexHullColor: color.RGBA{R: 255, G: 255, B: 0, A: 255},  // High contrast yellow opposite of steel blue
 		},
 		points: make([]Point, 0),
 	}
@@ -108,12 +112,27 @@ func (pv *PointVisualizer) UpdateCanvas() {
 		canvasY := padding + float32(pv.config.MaxY-point.Y)*scaleY - pv.config.PointSize/2
 
 		// Create point circle
-		circle := canvas.NewCircle(pv.config.PointColor)
+		circle := canvas.NewCircle(pv.config.PointColor) // Points are set to steel blue here
 		circle.Move(fyne.NewPos(canvasX, canvasY))
 		circle.Resize(fyne.NewSize(pv.config.PointSize, pv.config.PointSize))
 
 		pv.canvas.Add(circle)
 		pv.pointObjects = append(pv.pointObjects, circle)
+	}
+
+	for _, point := range pv.convexHull {
+		// Transform coordinates
+		canvasX := padding + float32(point.X-pv.config.MinX)*scaleX - pv.config.PointSize/2
+		canvasY := padding + float32(pv.config.MaxY-point.Y)*scaleY - pv.config.PointSize/2
+
+		// Create convex hull circle
+		circle := canvas.NewCircle(pv.config.ConvexHullColor) // Convex hull is set to red here
+		circle.Move(fyne.NewPos(canvasX, canvasY))
+		circle.Resize(fyne.NewSize(pv.config.PointSize, pv.config.PointSize))
+
+		// Add convex hull circle to canvas
+		pv.canvas.Add(circle)
+		pv.convexHullObjects = append(pv.convexHullObjects, circle)
 	}
 
 	pv.canvas.Refresh()
@@ -162,25 +181,33 @@ func (pv *PointVisualizer) CreateControlPanel() *container.Scroll {
 	}
 
 	// Color selection buttons
-	colorLabel := widget.NewLabel("Point Color:")
+	colorLabel := widget.NewLabel("Point Color: Blue Convex Hull: Yellow")
 
 	blueBtn := widget.NewButton("Blue", func() {
 		pv.config.PointColor = color.RGBA{R: 70, G: 130, B: 255, A: 255}
+		pv.config.ConvexHullColor = color.RGBA{R: 255, G: 255, B: 0, A: 255}
+		colorLabel.SetText("Point Color: Blue Convex Hull: Yellow")
 		pv.UpdateCanvas()
 	})
 
 	redBtn := widget.NewButton("Red", func() {
 		pv.config.PointColor = color.RGBA{R: 255, G: 99, B: 71, A: 255}
+		pv.config.ConvexHullColor = color.RGBA{R: 0, G: 255, B: 255, A: 255}
+		colorLabel.SetText("Point Color: Red Convex Hull: Cyan")
 		pv.UpdateCanvas()
 	})
 
 	greenBtn := widget.NewButton("Green", func() {
 		pv.config.PointColor = color.RGBA{R: 60, G: 179, B: 113, A: 255}
+		pv.config.ConvexHullColor = color.RGBA{R: 255, G: 0, B: 255, A: 255}
+		colorLabel.SetText("Point Color: Green Convex Hull: Magenta")
 		pv.UpdateCanvas()
 	})
 
 	purpleBtn := widget.NewButton("Purple", func() {
 		pv.config.PointColor = color.RGBA{R: 138, G: 43, B: 226, A: 255}
+		pv.config.ConvexHullColor = color.RGBA{R: 255, G: 255, B: 0, A: 255}
+		colorLabel.SetText("Point Color: Purple Convex Hull: Yellow")
 		pv.UpdateCanvas()
 	})
 
